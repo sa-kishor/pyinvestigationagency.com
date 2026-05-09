@@ -26,6 +26,7 @@ export default function ContactPage() {
   })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const validPhone = useMemo(() => /^[+]?\d{10,14}$/.test(form.phone.trim()), [form.phone])
 
@@ -35,7 +36,7 @@ export default function ContactPage() {
     setSuccess('')
   }
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     if (!form.name.trim() || !form.email.trim() || !form.phone.trim()) {
@@ -51,8 +52,16 @@ export default function ContactPage() {
       return
     }
 
-    setSuccess('Your inquiry has been submitted. Our team will reach out shortly.')
-    setForm({ name: '', email: '', phone: '', service: '', message: '' })
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    // Frontend only - show local success message
+    setTimeout(() => {
+      setSuccess('Thank you for your inquiry! (Frontend demo - not submitted)')
+      setForm({ name: '', email: '', phone: '', service: '', message: '' })
+      setLoading(false)
+    }, 500)
   }
 
   return (
@@ -143,14 +152,15 @@ export default function ContactPage() {
                 onChange={(event) => onChange('message', event.target.value)}
               />
 
-              {error ? <p className="text-sm text-brand-muted">{error}</p> : null}
+              {error ? <p className="text-sm text-red-400">{error}</p> : null}
               {success ? <p className="text-sm text-brand-gold">{success}</p> : null}
 
               <button
                 type="submit"
-                className="btn-gold w-full rounded-sm border border-brand-gold bg-brand-gold px-6 py-3 text-sm font-semibold text-brand-black transition hover:border-brand-gold-hover hover:bg-brand-gold-hover"
+                disabled={loading}
+                className="btn-gold w-full rounded-sm border border-brand-gold bg-brand-gold px-6 py-3 text-sm font-semibold text-brand-black transition hover:border-brand-gold-hover hover:bg-brand-gold-hover disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Send Inquiry
+                {loading ? 'Submitting...' : 'Send Inquiry'}
               </button>
             </form>
           </div>

@@ -1,4 +1,3 @@
-import BlogGrid from '@/components/sections/BlogGrid'
 import CTABanner from '@/components/sections/CTABanner'
 import CoreServices from '@/components/sections/CoreServices'
 import ExpertiseGrid from '@/components/sections/ExpertiseGrid'
@@ -15,7 +14,6 @@ export default function HomePage() {
       <ExpertiseGrid />
       <TestimonialsSection />
       <CTABanner />
-      <BlogGrid />
     </>
   )
 }

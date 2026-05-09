@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import GoldButton from '@/components/ui/GoldButton'
 import { CONTACT } from '@/lib/constants'
@@ -47,7 +48,7 @@ export default function HeroSection() {
           className="mx-auto mt-8 max-w-3xl text-base leading-8 text-brand-muted sm:text-lg"
         >
           Professional intelligence services with 100% confidentiality and evidence-based
-          reporting. Serving Tamil Nadu and Pondicherry.
+          reporting. Serving <span className="text-brand-gold">Tamil Nadu, Puducherry and Bengaluru</span>.
         </motion.p>
 
         <motion.div
@@ -60,13 +61,12 @@ export default function HeroSection() {
           <GoldButton href="/contact" className="px-8 py-4">
             Start Investigation →
           </GoldButton>
-          <GoldButton
+          <Link
             href={`tel:${CONTACT.phone}`}
-            variant="outline"
-            className="border-[#25D366] px-8 py-4 text-[#25D366] hover:bg-[#25D366] hover:text-brand-black"
+            className="inline-flex items-center justify-center rounded-sm border border-[#25D366] bg-[#25D366] px-8 py-4 text-sm font-semibold text-brand-black transition duration-300 hover:bg-transparent hover:text-[#25D366]"
           >
             Call Now
-          </GoldButton>
+          </Link>
         </motion.div>
       </div>
     </section>

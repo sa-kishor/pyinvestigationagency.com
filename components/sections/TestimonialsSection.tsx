@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Link from 'next/link'
 import { BriefcaseBusiness, Lock, ShieldCheck, Star } from 'lucide-react'
 import GlassCard from '@/components/ui/GlassCard'
 import RevealOnScroll from '@/components/ui/RevealOnScroll'
@@ -23,32 +23,32 @@ export default function TestimonialsSection() {
           {testimonials.map((item, index) => (
             <RevealOnScroll key={item.id} delay={index * 0.08}>
               <GlassCard className="h-full">
-                <div className="flex items-center gap-1 text-brand-gold">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-current" />
-                  ))}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-brand-white">{item.name}</p>
+                      <p className="text-xs text-brand-muted">{item.date}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 text-brand-gold">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-current" />
+                    ))}
+                  </div>
                 </div>
                 <p className="mt-5 text-sm leading-7 text-brand-muted">&quot;{item.quote}&quot;</p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="h-11 w-11 overflow-hidden rounded-full border border-brand-border bg-brand-navy">
-                    <Image
-                      src={item.avatar}
-                      alt={`${item.name} avatar`}
-                      width={44}
-                      height={44}
-                      className="h-full w-full object-cover"
-                      placeholder="blur"
-                      blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxJyBoZWlnaHQ9JzEnPjxyZWN0IHdpZHRoPScxJyBoZWlnaHQ9JzEnIGZpbGw9JyMxMTE4MjcnLz48L3N2Zz4="
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-brand-white">{item.name}</p>
-                    <p className="text-xs text-brand-muted">{item.city}</p>
-                  </div>
-                </div>
               </GlassCard>
             </RevealOnScroll>
           ))}
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <Link
+            href="/reviews"
+            className="inline-flex items-center justify-center rounded-sm border border-brand-gold bg-transparent px-8 py-3 text-sm font-semibold text-brand-gold transition duration-300 hover:bg-brand-gold hover:text-brand-black"
+          >
+            View All Reviews →
+          </Link>
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3">

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from 'lucide-react'
+import { Mail, MapPin, Phone } from 'lucide-react'
 import { CONTACT } from '@/lib/constants'
 import LogoImage from '@/Images/logo.png'
 
@@ -8,8 +8,7 @@ const quickLinks = [
   { label: 'Home', href: '/' },
   { label: 'About Us', href: '/about' },
   { label: 'Our Services', href: '/services' },
-  { label: 'Locations', href: '/locations' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Reviews', href: '/reviews' },
   { label: 'Contact Us', href: '/contact' },
 ]
 
@@ -42,18 +41,6 @@ export default function Footer() {
             India&apos;s most trusted private investigation agency offering confidential and
             result-oriented detective services.
           </p>
-          <div className="mt-5 flex gap-3">
-            {[Twitter, Facebook, Instagram].map((Icon, idx) => (
-              <a
-                key={idx}
-                href="#"
-                aria-label="Social link"
-                className="rounded-md border border-brand-border p-2 text-brand-muted transition hover:text-brand-gold"
-              >
-                <Icon className="h-4 w-4" />
-              </a>
-            ))}
-          </div>
         </div>
 
         <div>

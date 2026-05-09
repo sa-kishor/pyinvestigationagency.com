@@ -12,7 +12,7 @@ const points = [
     desc: 'With over 15 years of field experience, we manage complex investigations with systematic methods and documented reporting.',
   },
   {
-    title: 'Strong Presence Across Tamil Nadu & Pondicherry',
+    title: 'Strong Presence Across Tamil Nadu, Puducherry & Bengaluru',
     desc: 'Our local investigators navigate cities and districts efficiently for quick response and discreet ground-level investigation.',
   },
 ]

@@ -14,7 +14,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'Py Investigation Agency',
   description:
-    'Premium private investigation services across Tamil Nadu and Pondicherry with strict confidentiality and evidence-backed reporting.',
+    'Premium private investigation services across Tamil Nadu, Puducherry and Bengaluru with strict confidentiality and evidence-backed reporting.',
   icons: {
     icon: '/logo.png',
     shortcut: '/logo.png',

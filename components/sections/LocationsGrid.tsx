@@ -9,7 +9,7 @@ export default function LocationsGrid() {
       <div className="mx-auto max-w-7xl">
         <RevealOnScroll>
           <SectionHeader
-            title="Investigation Services Across Tamil Nadu"
+            title="Investigation Services Across Tamil Nadu, Puducherry and Bengaluru"
             subtitle="We operate across all major cities and districts with experienced field investigators."
           />
         </RevealOnScroll>

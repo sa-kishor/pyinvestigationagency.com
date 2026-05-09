@@ -34,6 +34,7 @@ export default function CallbackForm({
   })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const validPhone = useMemo(() => /^[+]?\d{10,14}$/.test(form.phone.trim()), [form.phone])
 
@@ -43,7 +44,7 @@ export default function CallbackForm({
     setSuccess('')
   }
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     if (!form.name.trim() || !form.phone.trim()) {
@@ -59,8 +60,26 @@ export default function CallbackForm({
       return
     }
 
-    setSuccess('Your request has been recorded. Our team will contact you shortly.')
-    setForm({ name: '', phone: '', email: '', type: prefilledType, message: '' })
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      setLoading(true)
+      setError('')
+      setSuccess('')
+
+      // Frontend only - show local success message
+      setTimeout(() => {
+        setSuccess('Thank you for your request! (Frontend demo - not submitted)')
+        setForm({ name: '', phone: '', email: '', type: prefilledType, message: '' })
+        setLoading(false)
+      }, 500)
+    } catch (err) {
+      console.error('Submit error:', err)
+      setError('Error processing request.')
+      setLoading(false)
+    }
   }
 
   return (
@@ -102,14 +121,15 @@ export default function CallbackForm({
           onChange={(event) => onChange('message', event.target.value)}
         />
 
-        {error ? <p className="text-sm text-brand-muted">{error}</p> : null}
+        {error ? <p className="text-sm text-red-400">{error}</p> : null}
         {success ? <p className="text-sm text-brand-gold">{success}</p> : null}
 
         <button
           type="submit"
-          className="btn-gold w-full rounded-sm border border-brand-gold bg-brand-gold px-6 py-3 text-sm font-semibold text-brand-black transition hover:border-brand-gold-hover hover:bg-brand-gold-hover"
+          disabled={loading}
+          className="btn-gold w-full rounded-sm border border-brand-gold bg-brand-gold px-6 py-3 text-sm font-semibold text-brand-black transition hover:border-brand-gold-hover hover:bg-brand-gold-hover disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {ctaLabel}
+          {loading ? 'Submitting...' : ctaLabel}
         </button>
       </form>
     </GlassCard>

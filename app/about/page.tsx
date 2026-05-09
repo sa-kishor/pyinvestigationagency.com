@@ -1,4 +1,5 @@
 import CTABanner from '@/components/sections/CTABanner'
+import InvestigationGallery from '@/components/sections/InvestigationGallery'
 import PageHero from '@/components/sections/PageHero'
 import RevealOnScroll from '@/components/ui/RevealOnScroll'
 import SectionHeader from '@/components/ui/SectionHeader'
@@ -17,7 +18,7 @@ export default function AboutPage() {
     <>
       <PageHero
         title="About Py Investigation Agency"
-        subtitle="The premier intelligence agency in Pondicherry and Tamil Nadu."
+        subtitle="The premier intelligence agency in Tamil Nadu, Puducherry and Bengaluru."
         current="About"
       />
 
@@ -75,6 +76,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <InvestigationGallery />
 
       <CTABanner />
     </>

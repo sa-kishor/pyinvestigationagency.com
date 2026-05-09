@@ -3,63 +3,19 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronDown, Menu, Phone, X } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { CONTACT, NAV_LOCATIONS } from '@/lib/constants'
+import { Menu, Phone, X } from 'lucide-react'
+import { useState } from 'react'
+import { CONTACT } from '@/lib/constants'
 import LogoImage from '@/Images/logo.png'
 
-const serviceLinks = [
-  { label: 'Pre-Matrimonial', href: '/services/pre-matrimonial' },
-  { label: 'Post-Matrimonial', href: '/services/post-matrimonial' },
-  { label: 'Corporate Investigation', href: '/services/corporate-investigation' },
-  { label: 'Employee Verification', href: '/services/employee-verification' },
-  { label: 'Forensic Investigation', href: '/services/forensic-investigation' },
-  { label: 'Asset Tracing', href: '/services/asset-tracing' },
-  { label: 'Cyber Crime & Forensics', href: '/services/cyber-crime' },
-]
-
 const primaryLinks = [
+  { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
-  { label: 'Blog', href: '/blog' },
+  { label: 'Reviews', href: '/reviews' },
 ]
-
-function DesktopDropdown({
-  label,
-  links,
-}: {
-  label: string
-  links: Array<{ label: string; href: string }>
-}) {
-  return (
-    <div className="group relative">
-      <button className="inline-flex items-center gap-1 text-sm font-medium text-brand-white transition hover:text-brand-gold">
-        {label}
-        <ChevronDown className="h-4 w-4" />
-      </button>
-      <div className="pointer-events-none absolute left-0 top-full z-40 min-w-64 rounded-md border border-brand-border bg-brand-black p-2 opacity-0 transition duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
-        {links.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="block rounded px-3 py-2 text-sm text-brand-muted transition hover:bg-brand-navy hover:text-brand-gold"
-          >
-            {item.label}
-          </Link>
-        ))}
-      </div>
-    </div>
-  )
-}
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
-  const [mobileLocationsOpen, setMobileLocationsOpen] = useState(false)
-
-  const locationLinks = useMemo(
-    () => NAV_LOCATIONS.map((city) => ({ label: city, href: '/locations' })),
-    []
-  )
 
   return (
     <header className="sticky top-0 z-50 border-b border-brand-border bg-[rgba(11,15,25,0.95)] backdrop-blur-xl">
@@ -82,8 +38,6 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          <DesktopDropdown label="Services" links={serviceLinks} />
-          <DesktopDropdown label="Locations" links={locationLinks} />
           {primaryLinks.map((item) => (
             <Link
               key={item.href}
@@ -123,54 +77,6 @@ export default function Navbar() {
             className="fixed inset-0 top-20 z-40 overflow-y-auto bg-brand-black p-6 md:hidden"
           >
             <div className="space-y-4">
-              <button
-                className="flex w-full items-center justify-between border-b border-brand-border py-3 text-left text-lg text-brand-white"
-                onClick={() => setMobileServicesOpen((prev) => !prev)}
-              >
-                Services
-                <ChevronDown
-                  className={`h-5 w-5 text-brand-gold transition ${mobileServicesOpen ? 'rotate-180' : ''}`}
-                />
-              </button>
-              {mobileServicesOpen ? (
-                <div className="space-y-2 rounded border border-brand-border bg-brand-navy/60 p-3">
-                  {serviceLinks.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="block py-2 text-sm text-brand-muted"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              ) : null}
-
-              <button
-                className="flex w-full items-center justify-between border-b border-brand-border py-3 text-left text-lg text-brand-white"
-                onClick={() => setMobileLocationsOpen((prev) => !prev)}
-              >
-                Locations
-                <ChevronDown
-                  className={`h-5 w-5 text-brand-gold transition ${mobileLocationsOpen ? 'rotate-180' : ''}`}
-                />
-              </button>
-              {mobileLocationsOpen ? (
-                <div className="grid grid-cols-2 gap-2 rounded border border-brand-border bg-brand-navy/60 p-3">
-                  {locationLinks.map((item, idx) => (
-                    <Link
-                      key={`${item.label}-${idx}`}
-                      href={item.href}
-                      className="py-2 text-sm text-brand-muted"
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              ) : null}
-
               {primaryLinks.map((item) => (
                 <Link
                   key={item.href}
