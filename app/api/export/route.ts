@@ -30,15 +30,30 @@ export async function GET(request: NextRequest) {
 
     if (type === 'inquiries') {
       const filePath = path.join(DATA_DIR, 'inquiries.json');
+      if (!fs.existsSync(filePath)) {
+        return NextResponse.json({ type, count: 0, data: [], exportDate: new Date().toISOString() });
+      }
       const fileContent = fs.readFileSync(filePath, 'utf-8');
       const parsed = JSON.parse(fileContent);
-      data = parsed.inquiries || [];
+      data = Array.isArray(parsed) ? parsed : parsed.inquiries || [];
       filename = 'inquiries';
+    } else if (type === 'visitors') {
+      const filePath = path.join(DATA_DIR, 'visitors.json');
+      if (!fs.existsSync(filePath)) {
+        return NextResponse.json({ type, count: 0, data: [], exportDate: new Date().toISOString() });
+      }
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
+      const parsed = JSON.parse(fileContent);
+      data = Array.isArray(parsed) ? parsed : parsed.visitors || [];
+      filename = 'visitors';
     } else if (type === 'testimonials') {
       const filePath = path.join(DATA_DIR, 'testimonials.json');
+      if (!fs.existsSync(filePath)) {
+        return NextResponse.json({ type, count: 0, data: [], exportDate: new Date().toISOString() });
+      }
       const fileContent = fs.readFileSync(filePath, 'utf-8');
       const parsed = JSON.parse(fileContent);
-      data = parsed.testimonials || [];
+      data = Array.isArray(parsed) ? parsed : parsed.testimonials || [];
       filename = 'testimonials';
     }
 
@@ -61,15 +76,29 @@ export async function GET(request: NextRequest) {
           })),
           headers
         );
+      } else if (type === 'visitors') {
+        headers = ['ID', 'Full Name', 'Phone Number', 'WhatsApp Number', 'Email', 'Submitted At'];
+        csvContent = jsonToCSV(
+          data.map(item => ({
+            'ID': item.id,
+            'Full Name': item.fullName,
+            'Phone Number': item.phoneNumber,
+            'WhatsApp Number': item.whatsappNumber || 'N/A',
+            'Email': item.email,
+            'Submitted At': item.submittedAt
+          })),
+          headers
+        );
       } else if (type === 'testimonials') {
-        headers = ['ID', 'Name', 'Review', 'Date', 'Submitted Date'];
+        headers = ['ID', 'Name', 'Email', 'Rating', 'Review', 'Date'];
         csvContent = jsonToCSV(
           data.map(item => ({
             'ID': item.id,
             'Name': item.name,
-            'Review': item.quote,
-            'Date': item.date,
-            'Submitted Date': item.createdAt
+            'Email': item.email || '',
+            'Rating': item.rating || 5,
+            'Review': item.quote || item.text || '',
+            'Date': item.createdAt || item.date
           })),
           headers
         );

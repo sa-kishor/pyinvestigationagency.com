@@ -69,15 +69,31 @@ export default function CallbackForm({
       setError('')
       setSuccess('')
 
-      // Frontend only - show local success message
-      setTimeout(() => {
-        setSuccess('Thank you for your request! (Frontend demo - not submitted)')
-        setForm({ name: '', phone: '', email: '', type: prefilledType, message: '' })
-        setLoading(false)
-      }, 500)
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim() || 'noemail@provided.com',
+          phone: form.phone.trim(),
+          serviceType: form.type || 'General Inquiry',
+          message: form.message.trim(),
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to submit: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      setSuccess('Thank you! We received your request. Check your email for confirmation.')
+      setForm({ name: '', phone: '', email: '', type: prefilledType, message: '' })
+      setLoading(false)
     } catch (err) {
       console.error('Submit error:', err)
-      setError('Error processing request.')
+      setError('Error processing request. Please try again.')
       setLoading(false)
     }
   }
@@ -121,8 +137,8 @@ export default function CallbackForm({
           onChange={(event) => onChange('message', event.target.value)}
         />
 
-        {error ? <p className="text-sm text-red-400">{error}</p> : null}
-        {success ? <p className="text-sm text-brand-gold">{success}</p> : null}
+        {error ? <p className="rounded-md p-3 text-sm bg-red-900/30 text-red-400">{error}</p> : null}
+        {success ? <p className="rounded-md p-3 text-sm bg-green-900/30 text-green-400">{success}</p> : null}
 
         <button
           type="submit"

@@ -73,7 +73,7 @@ async function sendEmail(to: string, subject: string, html: string) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        from: 'Py Investigation Agency <noreply@pyinvestigation.com>',
+        from: 'onboarding@resend.dev',
         to: to,
         subject: subject,
         html: html,
@@ -100,12 +100,16 @@ export async function POST(request: Request) {
   const body = await request.json();
   const testimonials = readTestimonials();
 
+  // Handle both format: quote (old) and text with rating (new)
   const newTestimonial = {
     id: testimonials.length + 1,
-    quote: body.quote,
+    quote: body.quote || body.text,
     name: body.name,
+    email: body.email || '',
+    rating: body.rating || 5,
     date: body.date || new Date().toLocaleDateString(),
     createdAt: new Date().toISOString(),
+    status: 'PENDING', // Default to PENDING - admin must approve
   };
 
   testimonials.push(newTestimonial);
@@ -115,10 +119,11 @@ export async function POST(request: Request) {
   const adminEmailHtml = `
     <h2>New Testimonial/Review Received</h2>
     <p><strong>From:</strong> ${body.name}</p>
-    <p><strong>Date:</strong> ${newTestimonial.date}</p>
+    <p><strong>Email:</strong> ${body.email || 'Not provided'}</p>
+    <p><strong>Rating:</strong> ${'⭐'.repeat(body.rating || 5)}</p>
     <p><strong>Review:</strong></p>
     <p style="background:#f0f0f0; padding:10px; border-left: 4px solid #d4af37;">
-      "${body.quote}"
+      "${body.quote || body.text}"
     </p>
     <p>Review ID: ${newTestimonial.id}</p>
     <p><em>This review has been automatically added to your testimonials section.</em></p>

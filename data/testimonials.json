@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "quote": "Parthiban sir is very kind and professional. Trustworthy service, quick response, and clear guidance. Highly recommended!",
+    "name": "Divyadharshini",
+    "date": "12 Jan 2025",
+    "createdAt": "2025-01-12T10:00:00Z",
+    "status": "APPROVED"
+  },
+  {
+    "id": 2,
+    "quote": "This agency truly exceeded my expectations. Their investigators are highly experienced, professional, and extremely committed to delivering accurate information.",
+    "name": "Gayathri.V",
+    "date": "05 Dec 2025",
+    "createdAt": "2025-12-05T10:00:00Z",
+    "status": "APPROVED"
+  },
+  {
+    "id": 3,
+    "quote": "Very good work done. Highly recommended. I used them for gathering evidence against my cheating spouse.",
+    "name": "Sudha Sudha",
+    "date": "26 Apr 2025",
+    "createdAt": "2025-04-26T10:00:00Z",
+    "status": "APPROVED"
+  }
+]

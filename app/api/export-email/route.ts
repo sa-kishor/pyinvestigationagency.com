@@ -37,7 +37,7 @@ async function sendEmailWithCSV(to: string, subject: string, csvContent: string,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'noreply@resend.dev',
+        from: 'onboarding@resend.dev',
         to: to,
         subject: subject,
         html: `

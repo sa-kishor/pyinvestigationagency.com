@@ -1,6 +1,7 @@
 'use client'
 
 import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from 'lucide-react'
+import Image from 'next/image'
 import { useMemo, useState } from 'react'
 import PageHero from '@/components/sections/PageHero'
 import { investigationTypes } from '@/lib/data/services'
@@ -56,12 +57,33 @@ export default function ContactPage() {
     setError('')
     setSuccess('')
 
-    // Frontend only - show local success message
-    setTimeout(() => {
-      setSuccess('Thank you for your inquiry! (Frontend demo - not submitted)')
+    try {
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          serviceType: form.service || 'General Inquiry',
+          message: form.message.trim(),
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to submit: ${response.statusText}`)
+      }
+
+      setSuccess('Thank you! We received your inquiry. Check your email for confirmation.')
       setForm({ name: '', email: '', phone: '', service: '', message: '' })
+    } catch (err) {
+      console.error('Submit error:', err)
+      setError('Error processing request. Please try again.')
+    } finally {
       setLoading(false)
-    }, 500)
+    }
   }
 
   return (
@@ -83,12 +105,17 @@ export default function ContactPage() {
                 <MapPin className="mt-0.5 h-4 w-4 text-brand-gold" />
                 <span>{CONTACT.address}</span>
               </p>
-              <p className="flex items-start gap-3">
+              <div className="flex items-start gap-3">
                 <Phone className="mt-0.5 h-4 w-4 text-brand-gold" />
-                <a href={`tel:${CONTACT.phone}`} className="transition hover:text-brand-gold">
-                  {CONTACT.phone}
-                </a>
-              </p>
+                <div className="space-y-1">
+                  <a href={`tel:${CONTACT.phone}`} className="block transition hover:text-brand-gold">
+                    {CONTACT.phone}
+                  </a>
+                  <a href={`tel:${CONTACT.phone2}`} className="block transition hover:text-brand-gold">
+                    {CONTACT.phone2}
+                  </a>
+                </div>
+              </div>
               <p className="flex items-start gap-3">
                 <Mail className="mt-0.5 h-4 w-4 text-brand-gold" />
                 <a href={`mailto:${CONTACT.email}`} className="transition hover:text-brand-gold">
@@ -108,6 +135,20 @@ export default function ContactPage() {
                   <Icon className="h-4 w-4" />
                 </a>
               ))}
+              <a
+                href="#"
+                className="rounded border border-brand-border p-2 transition hover:opacity-80"
+                aria-label="Just Dial"
+                title="Just Dial"
+              >
+                <Image
+                  src="/justdial.svg"
+                  alt="Just Dial"
+                  width={16}
+                  height={16}
+                  className="h-4 w-4 object-contain"
+                />
+              </a>
             </div>
           </div>
 
@@ -152,8 +193,8 @@ export default function ContactPage() {
                 onChange={(event) => onChange('message', event.target.value)}
               />
 
-              {error ? <p className="text-sm text-red-400">{error}</p> : null}
-              {success ? <p className="text-sm text-brand-gold">{success}</p> : null}
+              {error ? <p className="rounded-md p-3 text-sm bg-red-900/30 text-red-400">{error}</p> : null}
+              {success ? <p className="rounded-md p-3 text-sm bg-green-900/30 text-green-400">{success}</p> : null}
 
               <button
                 type="submit"

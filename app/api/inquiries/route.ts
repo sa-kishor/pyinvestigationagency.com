@@ -49,7 +49,7 @@ async function sendEmail(to: string, subject: string, html: string) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        from: 'Py Investigation Agency <noreply@pyinvestigation.com>',
+        from: 'onboarding@resend.dev',
         to: to,
         subject: subject,
         html: html,

@@ -3,6 +3,7 @@ import { Poppins } from 'next/font/google'
 import Footer from '@/components/layout/Footer'
 import FloatingActions from '@/components/layout/FloatingActions'
 import Navbar from '@/components/layout/Navbar'
+import LayoutContent from '@/app/LayoutContent'
 import './globals.css'
 
 const poppins = Poppins({
@@ -28,7 +29,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={`${poppins.className} min-h-screen bg-brand-black text-brand-white antialiased`}>
         <div className="relative flex min-h-screen flex-col">
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1">
+            <LayoutContent>
+              <div className="relative flex min-h-screen flex-col">
+                {children}
+              </div>
+            </LayoutContent>
+          </main>
           <Footer />
           <FloatingActions />
         </div>

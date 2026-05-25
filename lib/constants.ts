@@ -1,6 +1,8 @@
 export const CONTACT = {
   phone: '+919487979832',
+  phone2: '+917200841992',
   whatsapp: '+919487979832',
+  whatsapp2: '+917200841992',
   email: 'pyinvestigationagency@gmail.com',
   address: 'No 141A, 1st Floor, Opposite to Police Station, Cuddalore Main Road, Mudaliarpet, Pondicherry-605004',
   whatsappMessage: 'Hello, I need investigation services. Please contact me.',

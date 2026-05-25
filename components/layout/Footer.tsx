@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Mail, MapPin, Phone } from 'lucide-react'
+import { Mail, MapPin, Phone, Twitter, Facebook, Instagram } from 'lucide-react'
 import { CONTACT } from '@/lib/constants'
 import LogoImage from '@/Images/logo.png'
 
@@ -78,9 +78,14 @@ export default function Footer() {
             </li>
             <li className="flex items-start gap-3">
               <Phone className="mt-0.5 h-4 w-4 text-brand-gold" />
-              <a href={`tel:${CONTACT.phone}`} className="transition hover:text-brand-gold">
-                {CONTACT.phone}
-              </a>
+              <div className="space-y-1">
+                <a href={`tel:${CONTACT.phone}`} className="block transition hover:text-brand-gold">
+                  {CONTACT.phone}
+                </a>
+                <a href={`tel:${CONTACT.phone2}`} className="block transition hover:text-brand-gold">
+                  {CONTACT.phone2}
+                </a>
+              </div>
             </li>
             <li className="flex items-start gap-3">
               <Mail className="mt-0.5 h-4 w-4 text-brand-gold" />
@@ -89,6 +94,47 @@ export default function Footer() {
               </a>
             </li>
           </ul>
+
+          <div className="mt-6 flex gap-3">
+            <a
+              href="#"
+              className="rounded border border-brand-border p-2 text-brand-muted transition hover:text-brand-gold"
+              aria-label="Twitter"
+              title="Twitter"
+            >
+              <Twitter className="h-4 w-4" />
+            </a>
+            <a
+              href="#"
+              className="rounded border border-brand-border p-2 text-brand-muted transition hover:text-brand-gold"
+              aria-label="Facebook"
+              title="Facebook"
+            >
+              <Facebook className="h-4 w-4" />
+            </a>
+            <a
+              href="#"
+              className="rounded border border-brand-border p-2 text-brand-muted transition hover:text-brand-gold"
+              aria-label="Instagram"
+              title="Instagram"
+            >
+              <Instagram className="h-4 w-4" />
+            </a>
+            <a
+              href="#"
+              className="rounded border border-brand-border p-2 transition hover:opacity-80"
+              aria-label="Just Dial"
+              title="Just Dial"
+            >
+              <Image
+                src="/justdial.svg"
+                alt="Just Dial"
+                width={16}
+                height={16}
+                className="h-4 w-4 object-contain"
+              />
+            </a>
+          </div>
         </div>
       </div>
 

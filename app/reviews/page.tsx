@@ -26,26 +26,33 @@ export default function ReviewsPage() {
   const fetchReviews = async () => {
     try {
       setLoading(true)
-      // Frontend only - show mock reviews
-      const mockReviews: Review[] = [
-        {
-          id: '1',
-          name: 'Rajesh Kumar',
-          rating: 5,
-          text: 'Excellent investigation service. The team was professional and delivered results on time.',
-          createdAt: new Date().toISOString(),
+      const response = await fetch('/api/testimonials', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        {
-          id: '2',
-          name: 'Priya Singh',
-          rating: 5,
-          text: 'Highly recommend their corporate investigation services. Very discreet and thorough.',
-          createdAt: new Date(Date.now() - 86400000).toISOString(),
-        },
-      ]
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch reviews')
+      }
+
+      const data = await response.json()
+      const testimonials = data.data || []
+
+      // Transform testimonials to Review format - ONLY APPROVED REVIEWS
+      const reviews: Review[] = testimonials
+        .filter((t: any) => t.status === 'APPROVED' || !t.status) // Show approved + old reviews without status
+        .map((t: any) => ({
+          id: String(t.id),
+          name: t.name,
+          rating: t.rating || 5,
+          text: t.quote || t.text || '',
+          createdAt: t.createdAt,
+        }))
 
       // Apply filters and sorting
-      let filtered = mockReviews
+      let filtered = reviews
       if (selectedRating) {
         filtered = filtered.filter((r) => r.rating === selectedRating)
       }
@@ -183,15 +190,36 @@ function ReviewForm({
     setLoading(true)
     setMessage('')
 
-    // Frontend only - show local success message
-    setTimeout(() => {
-      setMessage('Review submitted! Thank you for your feedback. (Frontend demo - not saved)')
+    try {
+      const response = await fetch('/api/testimonials', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          rating: formData.rating,
+          text: formData.text,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to submit review')
+      }
+
+      setMessage('Review submitted! Thank you for your feedback.')
       setFormData({ name: '', email: '', rating: 5, text: '' })
       setTimeout(() => {
+        onSuccess()
         onSubmit()
       }, 1500)
+    } catch (error) {
+      console.error('Error submitting review:', error)
+      setMessage('Error submitting review. Please try again.')
+    } finally {
       setLoading(false)
-    }, 500)
+    }
   }
 
   return (
