@@ -88,7 +88,7 @@ export default function CallbackForm({
       }
 
       const data = await response.json()
-      setSuccess('Thank you! We received your request. Check your email for confirmation.')
+      setSuccess('Thank you! We received your inquiry. Check your email for confirmation.')
       setForm({ name: '', phone: '', email: '', type: prefilledType, message: '' })
       setLoading(false)
     } catch (err) {

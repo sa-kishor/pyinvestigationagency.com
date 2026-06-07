@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+// Use /tmp on Vercel (writable), or local data dir on localhost
+const DATA_DIR = process.env.VERCEL
+  ? '/tmp'
+  : path.join(process.cwd(), 'data');
 
 // Helper function to convert JSON to CSV
 function jsonToCSV(data: any[], headers: string[]): string {

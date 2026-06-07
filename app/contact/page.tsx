@@ -1,6 +1,6 @@
 'use client'
 
-import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from 'lucide-react'
+import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react'
 import Image from 'next/image'
 import { useMemo, useState } from 'react'
 import PageHero from '@/components/sections/PageHero'
@@ -125,21 +125,30 @@ export default function ContactPage() {
             </div>
 
             <div className="flex gap-3">
-              {[Twitter, Facebook, Instagram].map((Icon, idx) => (
-                <a
-                  key={idx}
-                  href="#"
-                  className="rounded border border-brand-border p-2 text-brand-muted transition hover:text-brand-gold"
-                  aria-label="Social profile"
-                >
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
+              {[Facebook, Instagram].map((Icon, idx) => {
+                const links = [
+                  'https://www.facebook.com/profile.php?id=61590361357500',
+                  '#'
+                ]
+                return (
+                  <a
+                    key={idx}
+                    href={links[idx]}
+                    className="rounded border border-brand-border p-2 text-brand-muted transition hover:text-brand-gold"
+                    aria-label="Social profile"
+                    {...(idx === 0 ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                )
+              })}
               <a
-                href="#"
+                href="https://www.justdial.com/Pondicherry/PY-Investigation-Agency-Opposite-To-Police-Station-Mudaliarpet/0413PX413-X413-240909161629-L2I5_BZDET#google_vignette"
                 className="rounded border border-brand-border p-2 transition hover:opacity-80"
                 aria-label="Just Dial"
                 title="Just Dial"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Image
                   src="/justdial.svg"

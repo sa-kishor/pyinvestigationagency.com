@@ -28,9 +28,14 @@ export default function AdminLoginPage() {
       const data = await response.json()
 
       if (response.ok) {
-        // Store token in localStorage
+        // Store token in cookie (middleware can read this)
+        document.cookie = `adminToken=${data.token}; path=/; max-age=${24 * 60 * 60}; SameSite=Strict`
+        document.cookie = `adminEmail=${email}; path=/; max-age=${24 * 60 * 60}; SameSite=Strict`
+        
+        // Also store in localStorage for client-side use
         localStorage.setItem('adminToken', data.token)
         localStorage.setItem('adminEmail', email)
+        
         // Redirect to admin dashboard
         router.push('/admin')
       } else {
@@ -118,15 +123,7 @@ export default function AdminLoginPage() {
           </p>
         </form>
 
-        {/* Demo Credentials (in development only) */}
-        <div className="mt-8 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-          <p className="text-blue-400 text-xs font-semibold mb-2">Demo Credentials:</p>
-          <p className="text-blue-300 text-xs mb-1">Email: admin@pyinvestigation.com</p>
-          <p className="text-blue-300 text-xs">Password: admin@123456</p>
-          <p className="text-blue-400 text-xs mt-3 italic">
-            Change these credentials in production!
-          </p>
-        </div>
+
       </div>
     </div>
   )

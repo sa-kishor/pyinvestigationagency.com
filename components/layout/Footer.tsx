@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Mail, MapPin, Phone, Twitter, Facebook, Instagram } from 'lucide-react'
+import { Facebook, Instagram, Mail, MapPin, Phone } from 'lucide-react'
 import { CONTACT } from '@/lib/constants'
 import LogoImage from '@/Images/logo.png'
 
@@ -97,18 +97,12 @@ export default function Footer() {
 
           <div className="mt-6 flex gap-3">
             <a
-              href="#"
-              className="rounded border border-brand-border p-2 text-brand-muted transition hover:text-brand-gold"
-              aria-label="Twitter"
-              title="Twitter"
-            >
-              <Twitter className="h-4 w-4" />
-            </a>
-            <a
-              href="#"
+              href="https://www.facebook.com/profile.php?id=61590361357500"
               className="rounded border border-brand-border p-2 text-brand-muted transition hover:text-brand-gold"
               aria-label="Facebook"
               title="Facebook"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <Facebook className="h-4 w-4" />
             </a>
@@ -121,10 +115,12 @@ export default function Footer() {
               <Instagram className="h-4 w-4" />
             </a>
             <a
-              href="#"
+              href="https://www.justdial.com/Pondicherry/PY-Investigation-Agency-Opposite-To-Police-Station-Mudaliarpet/0413PX413-X413-240909161629-L2I5_BZDET#google_vignette"
               className="rounded border border-brand-border p-2 transition hover:opacity-80"
               aria-label="Just Dial"
               title="Just Dial"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <Image
                 src="/justdial.svg"

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import path from 'path';
+import { sendWhatsAppNotification } from '@/lib/services/notifications';
 
 const dataDir = path.join(process.cwd(), 'data');
 const inquiriesFile = path.join(dataDir, 'inquiries.json');
@@ -56,6 +57,12 @@ async function sendEmail(to: string, subject: string, html: string) {
       }),
     });
 
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('Email send failed:', error);
+    } else {
+      console.log('✓ Email sent to', to);
+    }
     return response.ok;
   } catch (error) {
     console.error('Email send error:', error);
@@ -92,25 +99,27 @@ export async function POST(request: Request) {
 
   // Send confirmation email to customer
   const customerEmailHtml = `
-    <h2>Thank You for Your Inquiry</h2>
-    <p>Hi ${body.name},</p>
-    <p>We have received your inquiry about <strong>${body.serviceType}</strong>.</p>
-    <p><strong>Your Details:</strong></p>
-    <ul>
-      <li>Service: ${body.serviceType}</li>
-      <li>Email: ${body.email}</li>
-      <li>Phone: ${body.phone}</li>
-      <li>Message: ${body.message}</li>
-    </ul>
-    <p>Our team will review your inquiry and contact you soon.</p>
-    <p>Thank you,<br/>Py Investigation Agency Team</p>
-  `;
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #1a1a1a;">Thank You for Your Inquiry</h2>
+      <p>Hi ${body.name},</p>
+      <p><strong>Thank you! We received your inquiry. Check your email for confirmation.</strong></p>
+      
+      <div style="background-color: #f5f5f5; padding: 15px; border-left: 4px solid #d4af37; margin: 20px 0;">
+        <p><strong>Your Inquiry Details:</strong></p>
+        <p>Service: ${body.serviceType}</p>
+        <p>Phone: ${body.phone}</p>
+        <p>Email: ${body.email}</p>
+        ${body.message ? `<p>Message: ${body.message}</p>` : ''}
+      </div>
 
-  await sendEmail(
-    body.email,
-    'Inquiry Received - Py Investigation Agency',
-    customerEmailHtml
-  );
+      <p style="color: #666; font-size: 12px; margin-top: 30px;">
+        <strong>Py Investigation Agency</strong><br>
+        No 141A, 1st Floor, Opposite to Police Station<br>
+        Cuddalore Main Road, Mudaliarpet, Pondicherry-605004<br>
+        Phone: +919487979832 | +917200841992
+      </p>
+    </div>
+  `;
 
   // Send notification email to admin
   const adminEmailHtml = `
@@ -125,10 +134,39 @@ export async function POST(request: Request) {
   `;
 
   await sendEmail(
+    body.email,
+    'Inquiry Received - Py Investigation Agency',
+    customerEmailHtml
+  );
+
+  await sendEmail(
     'pyinvestigationagency@gmail.com',
     'New Inquiry Received',
     adminEmailHtml
   );
+
+  // Send WhatsApp notification to both owner numbers
+  const ownerNumbers = ['+919487979832', '+917200841992'];
+  const whatsappMessage = `
+🔔 New Inquiry Received!
+
+Name: ${body.name}
+Phone: ${body.phone}
+Email: ${body.email}
+Service: ${body.serviceType}
+
+Message: ${body.message}
+
+Time: ${new Date().toLocaleString()}
+  `.trim();
+
+  for (const number of ownerNumbers) {
+    try {
+      await sendWhatsAppNotification(number, whatsappMessage);
+    } catch (error) {
+      console.error(`Failed to send WhatsApp to ${number}:`, error);
+    }
+  }
 
   return NextResponse.json(
     {

@@ -3,11 +3,14 @@ import fs from 'fs'
 import path from 'path'
 import { sendWhatsAppNotification } from '@/lib/services/notifications'
 
-const VISITORS_FILE = path.join(process.cwd(), 'data', 'visitors.json')
+// Use /tmp on Vercel (writable), or local data dir on localhost
+const VISITORS_FILE = process.env.VERCEL
+  ? path.join('/tmp', 'visitors.json')
+  : path.join(process.cwd(), 'data', 'visitors.json')
 
 // Ensure data directory exists
 function ensureDataDir() {
-  const dataDir = path.join(process.cwd(), 'data')
+  const dataDir = path.dirname(VISITORS_FILE)
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true })
   }
@@ -45,6 +48,41 @@ function saveVisitor(visitorData: any) {
   }
 }
 
+// Send email via Resend
+async function sendEmail(to: string, subject: string, html: string) {
+  try {
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      console.log('⚠️ RESEND_API_KEY not configured - email not sent')
+      return false
+    }
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        from: 'onboarding@resend.dev',
+        to: to,
+        subject: subject,
+        html: html,
+      }),
+    })
+
+    if (response.ok) {
+      console.log('✓ Email sent to', to)
+    } else {
+      console.error('Email send failed:', await response.text())
+    }
+    return response.ok
+  } catch (error) {
+    console.error('Email send error:', error)
+    return false
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -66,7 +104,27 @@ export async function POST(request: NextRequest) {
       email,
     })
 
-    // Send WhatsApp notifications to both owner numbers
+    // Send notification email to ADMIN ONLY
+    const adminEmailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #d4af37;">🔔 New Website Visitor</h2>
+        
+        <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <p><strong>Name:</strong> ${fullName}</p>
+          <p><strong>Phone:</strong> ${phoneNumber}</p>
+          ${whatsappNumber ? `<p><strong>WhatsApp:</strong> ${whatsappNumber}</p>` : ''}
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Submitted At:</strong> ${new Date().toLocaleString()}</p>
+        </div>
+
+        <p>Please follow up with this visitor at your earliest convenience.</p>
+      </div>
+    `
+
+    // Send email to admin only
+    await sendEmail('pyinvestigationagency@gmail.com', 'New Website Visitor Form Submission', adminEmailHtml)
+
+    // Send WhatsApp notifications to both owner numbers ONLY
     const ownerNumbers = ['+919487979832', '+917200841992']
     const notificationMessage = `
 🔔 New Website Visitor!
@@ -85,16 +143,6 @@ Time: ${new Date().toLocaleString()}
         await sendWhatsAppNotification(number, notificationMessage)
       } catch (error) {
         console.error(`Failed to send WhatsApp to ${number}:`, error)
-      }
-    }
-
-    // Send WhatsApp confirmation to customer
-    if (whatsappNumber) {
-      try {
-        const customerMessage = `Hi ${fullName}! 👋\n\nThank you for contacting Py Investigation Agency. We've received your information and will reach out to you shortly.\n\nBest regards,\nPy Investigation Agency Team`
-        await sendWhatsAppNotification(whatsappNumber, customerMessage)
-      } catch (error) {
-        console.error('Failed to send WhatsApp notification to customer:', error)
       }
     }
 

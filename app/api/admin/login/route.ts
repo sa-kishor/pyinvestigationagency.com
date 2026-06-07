@@ -3,8 +3,8 @@ import crypto from 'crypto'
 
 // Hardcoded admin credentials - CHANGE THESE IN PRODUCTION!
 // In production, use environment variables and store hashed passwords
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@pyinvestigation.com'
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin@123456'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'pyinvestigationagency@gmail.com'
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Parthi@1992..'
 
 // Generate a simple JWT-like token (you can upgrade to real JWT)
 function generateToken(email: string): string {
@@ -45,7 +45,9 @@ export async function POST(request: NextRequest) {
     // Check credentials
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       const token = generateToken(email)
-      return NextResponse.json(
+      
+      // Create response with Set-Cookie header
+      const response = NextResponse.json(
         {
           success: true,
           message: 'Login successful',
@@ -54,6 +56,19 @@ export async function POST(request: NextRequest) {
         },
         { status: 200 }
       )
+      
+      // Set secure cookie (24 hours)
+      response.cookies.set({
+        name: 'adminToken',
+        value: token,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60, // 24 hours
+        path: '/',
+      })
+      
+      return response
     } else {
       return NextResponse.json(
         { success: false, message: 'Invalid email or password' },
